@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Produtos')}"></head>
+<body>
+    <nav th:replace="fragments :: menu"></nav>
+    <div class="d-flex justify-content-center">
+        <div class="w-75 p-3">
+            <div th:if="${savedProduct != null}" class="alert alert-success alert-dismissible fade show">
+                Produto cadastrado com sucesso!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div th:if="${#fields.hasErrors('${productDTO}')}" class="alert alert-danger alert-dismissible fade show">
+                Código de barras já cadastrado para outro produto!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <p class="fs-2 fw-semibold">Produtos</p>
+            <form th:object="${productDTO}" class="mb-4" action="/product" method="post">
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="input-cod-barras" class="form-label">Código de Barras</label>
+                        <input th:field="*{barCode}" id="input-cod-barras" type="text" placeholder="Código de Barras" class="form-control" th:errorclass="is-invalid" autocomplete="off"/>
+                        <div class="invalid-feedback" th:errors="*{barCode}"></div>
+                    </div>
+                    <div class="col">
+                        <label for="input-nome" class="form-label">Nome</label>
+                        <input th:field="*{name}" id="input-nome" type="text" placeholder="Nome" class="form-control" th:errorclass="is-invalid" autocomplete="off"/>
+                        <div class="invalid-feedback" th:errors="*{name}"></div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="select-marca" class="form-label">Marca</label>
+                        <select th:field="*{brandId}" id="select-marca" class="form-select col" th:errorclass="is-invalid">
+                            <option selected disabled value="">Marca</option>
+                            <option th:each="brand : ${brands}"
+                                    th:value="${brand.brandId}" th:text="${brand.name}"></option>
+                        </select>
+                        <div class="invalid-feedback" th:errors="*{brandId}"></div>
+                    </div>
+                    <div class="col">
+                        <label for="input-preco" class="form-label">Preço</label>
+                        <div class="input-group has-validation">
+                            <span class="input-group-text">R$</span>
+                            <input th:field="*{price}" id="input-preco" type="number" placeholder="Preço" class="form-control" th:errorclass="is-invalid" autocomplete="off"/>
+                            <div class="invalid-feedback" th:errors="*{price}"></div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-success" type="submit">Salvar</button>
+            </form>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">id</th>
+                    <th scope="col">Código de Barras</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Marca</th>
+                    <th scope="col">Preço</th>
+                    <th scope="col">Excluir</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="product : ${products}">
+                    <th scope="row" th:text="${product.productId}"></th>
+                    <td th:text="${product.barCode}"></td>
+                    <td th:text="${product.name}"></td>
+                    <td th:text="${product.brand.name}"></td>
+                    <td th:text="${product.price.toString()}"></td>
+                    <td><i class="bi bi-trash-fill"></i></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="webjars/bootstrap/5.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

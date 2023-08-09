@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: head(Marcas)"></head>
+<body>
+  <nav th:replace="fragments :: menu"></nav>
+  <div class="d-flex justify-content-center">
+    <div class="w-75 p-3">
+      <div th:if="${savedBrand != null}" class="alert alert-success alert-dismissible fade show">
+        Marca cadastrada com sucesso!
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      <div th:if="${#fields.hasErrors('${brandDTO}')}" class="alert alert-danger alert-dismissible fade show">
+        Marca já cadastrada!
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      <p class="fs-2 fw-semibold">Marcas</p>
+      <form th:object="${brandDTO}" class="mb-4" action="/brand" method="post">
+        <div class="row mb-3">
+          <div class="col">
+            <label for="input-nome" class="form-label">Nome</label>
+            <input th:field="*{name}" id="input-nome" type="text" placeholder="Nome" class="form-control" th:errorclass="is-invalid" autocomplete="off"/>
+            <div class="invalid-feedback" th:errors="*{name}"></div>
+          </div>
+        </div>
+        <button class="btn btn-success" type="submit">Salvar</button>
+      </form>
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col">id</th>
+          <th scope="col">Nome</th>
+          <th scope="col">Excluir</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="brand : ${brands}">
+          <th scope="row" th:text="${brand.brandId}"></th>
+          <td th:text="${brand.name}"></td>
+          <td><i class="bi bi-trash-fill"></i></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>
